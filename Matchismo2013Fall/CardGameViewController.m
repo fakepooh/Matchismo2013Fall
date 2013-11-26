@@ -23,7 +23,7 @@
 - (void)setFlipCount:(unsigned int)flipCount {
     _flipCount = flipCount;
     self.flipsLabel.text = [NSString stringWithFormat:@"Flips: %d", self.flipCount];
-    NSLog(@"flipCount changed to %d", self.flipCount);
+    //NSLog(@"flipCount changed to %d", self.flipCount);
 }
 
 - (IBAction)touchCardButton:(UIButton *)sender {
@@ -47,9 +47,13 @@
 
 - (Deck *)deck {
     if (!_deck) {
-        _deck = [[PlayingCardDeck alloc] init];
+        _deck = [self createDeck];
     }
     return _deck;
+}
+
+- (Deck *)createDeck {
+    return [[PlayingCardDeck alloc] init];
 }
 
 @end
