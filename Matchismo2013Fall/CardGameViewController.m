@@ -32,9 +32,15 @@
                           forState:UIControlStateNormal];
         [sender setTitle:@"" forState:UIControlStateNormal];
     } else {
+        Card *card = [self.deck drawRandomCard];
+        if (!card) {
+            //deck is empty, re-draw
+            self.deck = nil;
+            card = [self.deck drawRandomCard];
+        }
         [sender setBackgroundImage:[UIImage imageNamed:@"cardfront"]
                           forState:UIControlStateNormal];
-        [sender setTitle:@"A♣" forState:UIControlStateNormal];
+        [sender setTitle:card.contents forState:UIControlStateNormal];
     }
     self.flipCount++;
 }
