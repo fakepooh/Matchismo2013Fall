@@ -14,11 +14,13 @@
 
 // designated initializer
 - (instancetype)initWithCardCount:(NSUInteger)count
-                        usingDeck:(Deck *)deck;
+                        usingDeck:(Deck *)deck
+                           inMode:(NSInteger)mode; // 0 - 2-card, 1 - 3-card
 
 - (void)chooseCardAtIndex:(NSUInteger)index;
 - (Card *)cardAtIndex:(NSUInteger)index;
 
 @property (nonatomic, readonly) NSInteger score;
+@property (nonatomic, strong, readonly) NSMutableArray *lastActionResult; // 0 - result, 1-n - cards involved
 
 @end
