@@ -407,7 +407,7 @@
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DRR-Ge-NU9">
                                 <rect key="frame" x="20" y="410" width="280" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -415,7 +415,9 @@
                         <color key="backgroundColor" red="0.0" green="0.50196081399917603" blue="0.25098040699958801" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <connections>
+                        <outlet property="dealButton" destination="IuD-Za-s9q" id="tUX-wF-Ues"/>
                         <outlet property="gameModeSegmentedControl" destination="feH-x9-exj" id="dFJ-j8-TYK"/>
+                        <outlet property="lastActionLable" destination="DRR-Ge-NU9" id="uCJ-cR-Q8e"/>
                         <outlet property="scoreLabel" destination="0Zl-fF-fnb" id="dmN-wq-bbG"/>
                         <outletCollection property="cardButtons" destination="Tyl-Xa-6FB" id="vH9-F3-eLj"/>
                         <outletCollection property="cardButtons" destination="0WD-XX-Jox" id="mBY-8w-6ZU"/>
@@ -451,7 +453,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="274" y="325"/>
+            <point key="canvasLocation" x="325" y="352"/>
         </scene>
     </scenes>
     <resources>

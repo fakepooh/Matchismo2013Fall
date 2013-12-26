@@ -22,5 +22,9 @@
 
 @property (nonatomic, readonly) NSInteger score;
 @property (nonatomic, strong, readonly) NSMutableArray *lastActionResult; // 0 - result, 1-n - cards involved
+// result:
+// -N - mismatch
+// N - match
+// count < 2 - match was not performed
 
 @end
