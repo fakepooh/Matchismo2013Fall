@@ -12,11 +12,14 @@
 
 @interface CardGameViewController ()
 @property (strong, nonatomic) CardMatchingGame *game;
+@property (strong, nonatomic) NSMutableArray *actionsHistory;
+
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *gameModeSegmentedControl;
 @property (weak, nonatomic) IBOutlet UIButton *dealButton;
 @property (weak, nonatomic) IBOutlet UILabel *lastActionLable;
+@property (weak, nonatomic) IBOutlet UISlider *actionsHistorySlider;
 @end
 
 @implementation CardGameViewController
@@ -27,6 +30,13 @@
                                                   usingDeck:[self createDeck]
                                                      inMode:self.gameModeSegmentedControl.selectedSegmentIndex];
     return _game;
+}
+
+- (NSMutableArray *)actionsHistory {
+    if (!_actionsHistory)
+        _actionsHistory = @[@""].mutableCopy;
+    
+    return _actionsHistory;
 }
 
 - (Deck *)createDeck {
@@ -56,6 +66,8 @@
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
     self.gameModeSegmentedControl.enabled = NO;
     
+    self.lastActionLable.alpha = 1;
+    
     if (self.game.lastActionResult.count > 1) {
         if ([self.game.lastActionResult[0] intValue] > 0) {
             // cards were matched
@@ -74,6 +86,18 @@
             self.lastActionLable.text = @"";
         }
     }
+    
+    if (![self.lastActionLable.text isEqualToString:@""]) {
+        self.actionsHistorySlider.enabled = YES;
+        [self.actionsHistory addObject:self.lastActionLable.text];
+    }
+    if (self.actionsHistory.count > 1) {
+        self.actionsHistorySlider.value = self.actionsHistorySlider.maximumValue = self.actionsHistory.count - 1;
+    } else {
+        self.actionsHistorySlider.value = self.actionsHistorySlider.maximumValue = 1;
+        self.actionsHistorySlider.enabled = NO;
+    }
+    
 }
 
 - (NSString *)titleForCard:(Card *)card {
@@ -86,10 +110,20 @@
 
 - (IBAction)touchDealButton {
     self.game = nil;
+    self.actionsHistory = nil;
     [self updateUI];
     self.gameModeSegmentedControl.enabled = YES;
     self.game = nil;
 }
 
+- (IBAction)actionsHistorySliderChanged:(UISlider *)sender {
+    sender.value = roundf(sender.value);
+    
+    self.lastActionLable.text = self.actionsHistory[(int)sender.value];
+    if ((int)sender.value < self.actionsHistory.count - 1)
+        self.lastActionLable.alpha = 0.5;
+    else
+        self.lastActionLable.alpha = 1;
+}
 
 @end
