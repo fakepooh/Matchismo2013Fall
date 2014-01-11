@@ -29,6 +29,10 @@
     return _cards;
 }
 
+-(instancetype)initWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck {
+    return [self initWithCardCount:count usingDeck:deck inMode:0];
+}
+
 - (instancetype)initWithCardCount:(NSUInteger)count
                         usingDeck:(Deck *)deck
                            inMode:(NSInteger)mode {

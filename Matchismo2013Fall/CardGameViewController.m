@@ -7,8 +7,8 @@
 //
 
 #import "CardGameViewController.h"
-#import "PlayingCardDeck.h"
 #import "CardMatchingGame.h"
+#import "GameHistoryViewController.h"
 
 @interface CardGameViewController ()
 @property (strong, nonatomic) CardMatchingGame *game;
@@ -16,7 +16,6 @@
 
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *gameModeSegmentedControl;
 @property (weak, nonatomic) IBOutlet UIButton *dealButton;
 @property (weak, nonatomic) IBOutlet UILabel *lastActionLable;
 @property (weak, nonatomic) IBOutlet UISlider *actionsHistorySlider;
@@ -27,8 +26,7 @@
 - (CardMatchingGame *)game {
     if (!_game)
         _game = [[CardMatchingGame alloc] initWithCardCount:self.cardButtons.count
-                                                  usingDeck:[self createDeck]
-                                                     inMode:self.gameModeSegmentedControl.selectedSegmentIndex];
+                                                  usingDeck:[self createDeck]];
     return _game;
 }
 
@@ -39,8 +37,17 @@
     return _actionsHistory;
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"Show Game History"]) {
+        if ([segue.destinationViewController isKindOfClass:[GameHistoryViewController class]]) {
+            GameHistoryViewController *ghvc = (GameHistoryViewController *)segue.destinationViewController;
+            ghvc.gameHistoryToShow = self.actionsHistory;
+        }
+    }
+}
+
 - (Deck *)createDeck {
-    return [[PlayingCardDeck alloc] init];
+    return nil;
 }
 
 - (IBAction)touchCardButton:(UIButton *)sender {
@@ -64,7 +71,6 @@
         }
     }
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
-    self.gameModeSegmentedControl.enabled = NO;
     
     self.lastActionLable.alpha = 1;
     
@@ -112,7 +118,6 @@
     self.game = nil;
     self.actionsHistory = nil;
     [self updateUI];
-    self.gameModeSegmentedControl.enabled = YES;
     self.game = nil;
 }
 
