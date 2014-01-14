@@ -16,9 +16,7 @@
 
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
-@property (weak, nonatomic) IBOutlet UIButton *dealButton;
 @property (weak, nonatomic) IBOutlet UILabel *lastActionLable;
-@property (weak, nonatomic) IBOutlet UISlider *actionsHistorySlider;
 @end
 
 @implementation CardGameViewController
@@ -92,18 +90,6 @@
             self.lastActionLable.text = @"";
         }
     }
-    
-    if (![self.lastActionLable.text isEqualToString:@""]) {
-        self.actionsHistorySlider.enabled = YES;
-        [self.actionsHistory addObject:self.lastActionLable.text];
-    }
-    if (self.actionsHistory.count > 1) {
-        self.actionsHistorySlider.value = self.actionsHistorySlider.maximumValue = self.actionsHistory.count - 1;
-    } else {
-        self.actionsHistorySlider.value = self.actionsHistorySlider.maximumValue = 1;
-        self.actionsHistorySlider.enabled = NO;
-    }
-    
 }
 
 - (NSString *)titleForCard:(Card *)card {
@@ -119,16 +105,6 @@
     self.actionsHistory = nil;
     [self updateUI];
     self.game = nil;
-}
-
-- (IBAction)actionsHistorySliderChanged:(UISlider *)sender {
-    sender.value = roundf(sender.value);
-    
-    self.lastActionLable.text = self.actionsHistory[(int)sender.value];
-    if ((int)sender.value < self.actionsHistory.count - 1)
-        self.lastActionLable.alpha = 0.5;
-    else
-        self.lastActionLable.alpha = 1;
 }
 
 @end
