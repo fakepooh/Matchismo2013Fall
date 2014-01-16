@@ -24,7 +24,7 @@
 - (CardMatchingGame *)game {
     if (!_game)
         _game = [[CardMatchingGame alloc] initWithCardCount:self.cardButtons.count
-                                                  usingDeck:[self createDeck]];
+                                                  usingDeck:[self createDeck] inMode:self.gameMode];
     return _game;
 }
 

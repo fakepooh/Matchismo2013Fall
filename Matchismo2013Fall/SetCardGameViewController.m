@@ -15,7 +15,13 @@
 
 @implementation SetCardGameViewController
 
-// implement createDeck
+- (void)viewWillAppear:(BOOL)animated {
+    self.gameMode = 1; //Set Game
+}
+
+- (Deck *)createDeck {
+    return [[SetCardDeck alloc] init];
+}
 
 - (NSString *)titleForCard:(Card *)card {
     return card.isChosen ? card.contents : @""; // change it
@@ -24,6 +30,5 @@
 - (UIImage *)backgroundImageForCard:(Card *)card {
     return [UIImage imageNamed:card.isChosen ? @"cardfront" : @"cardback"]; // change it
 }
-
 
 @end
