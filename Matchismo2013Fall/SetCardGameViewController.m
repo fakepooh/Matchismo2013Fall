@@ -8,6 +8,7 @@
 
 #import "SetCardGameViewController.h"
 #import "SetCardDeck.h"
+#import "SetCard.h"
 
 @interface SetCardGameViewController ()
 
@@ -15,7 +16,7 @@
 
 @implementation SetCardGameViewController
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewDidLoad {
     self.gameMode = 1; //Set Game
 }
 
@@ -23,12 +24,46 @@
     return [[SetCardDeck alloc] init];
 }
 
-- (NSString *)titleForCard:(Card *)card {
-    return card.isChosen ? card.contents : @""; // change it
+- (NSAttributedString *)titleForCard:(Card *)card {
+	NSMutableAttributedString *title = nil;
+	
+	if ([card isMemberOfClass:[SetCard class]]) {
+		SetCard *setCard = (SetCard *)card;
+		
+		// symbol & number
+		NSString *stringTitle = @"";
+		for (int i = 0; i < setCard.number; i++) {
+			stringTitle = [stringTitle stringByAppendingString:setCard.symbol];
+		}
+		
+		// color
+		UIColor *color = [[self setCardColors] valueForKey:setCard.color];
+		
+		// shading
+		NSNumber *stroke = @0; // default = solid
+		if ([setCard.shading isEqualToString:@"striped"]) { // actually transparent
+			color = [color colorWithAlphaComponent:0.5];
+		} else if ([setCard.shading isEqualToString:@"open"]) {
+			stroke = @3;
+		}
+		
+		// defining attributes
+		NSDictionary *attributes = @{NSForegroundColorAttributeName : color, NSStrokeWidthAttributeName : stroke, NSStrokeColorAttributeName : color};
+		
+		// creating attributed string
+		title = [[NSMutableAttributedString alloc] initWithString:stringTitle attributes:attributes];
+	}
+	
+    return title;
 }
 
 - (UIImage *)backgroundImageForCard:(Card *)card {
-    return [UIImage imageNamed:card.isChosen ? @"cardfront" : @"cardback"]; // change it
+    return [UIImage imageNamed:card.isChosen ? @"cardfront" : @"notchosensetcardfront"]; // change it
+}
+
+- (NSDictionary *)setCardColors {
+	return [NSDictionary dictionaryWithObjects:@[[UIColor redColor], [UIColor greenColor], [UIColor purpleColor]]
+									   forKeys:[SetCard validColors]];
 }
 
 @end

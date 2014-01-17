@@ -21,16 +21,21 @@
 
 @implementation CardGameViewController
 
+- (void)viewWillAppear:(BOOL)animated {
+	[self updateUI];
+}
+
 - (CardMatchingGame *)game {
     if (!_game)
         _game = [[CardMatchingGame alloc] initWithCardCount:self.cardButtons.count
-                                                  usingDeck:[self createDeck] inMode:self.gameMode];
+                                                  usingDeck:[self createDeck]
+													 inMode:self.gameMode];
     return _game;
 }
 
 - (NSMutableArray *)actionsHistory {
     if (!_actionsHistory)
-        _actionsHistory = @[@""].mutableCopy;
+        _actionsHistory = [[NSMutableArray alloc] init];
     
     return _actionsHistory;
 }
@@ -60,7 +65,7 @@
     for (UIButton *cardButton in self.cardButtons) {
         int cardButtonIndex = [self.cardButtons indexOfObject:cardButton];
         Card *card = [self.game cardAtIndex:cardButtonIndex];
-        [cardButton setTitle:[self titleForCard:card] forState:UIControlStateNormal];
+        [cardButton setAttributedTitle:[self titleForCard:card] forState:UIControlStateNormal];
         [cardButton setBackgroundImage:[self backgroundImageForCard:card] forState:UIControlStateNormal];
         cardButton.enabled = !card.isMatched;
         
@@ -76,24 +81,28 @@
         if ([self.game.lastActionResult[0] intValue] > 0) {
             // cards were matched
             NSRange range = {1, self.game.lastActionResult.count - 1};
-            self.lastActionLable.text = [NSString stringWithFormat:@"Matched %@ for %d points!", [[self.game.lastActionResult subarrayWithRange:range] componentsJoinedByString:@" "], [self.game.lastActionResult[0] intValue]];
+            self.lastActionLable.text = [NSString stringWithFormat:@"Matched %@ for %d points!", [self describeCardsArray:[self.game.lastActionResult subarrayWithRange:range]].string, [self.game.lastActionResult[0] intValue]];
         } else if ([self.game.lastActionResult[0] intValue] < 0) {
             // cards were mismatched
             NSRange range = {1, self.game.lastActionResult.count - 1};
-            self.lastActionLable.text = [NSString stringWithFormat:@"%@ don't match! %d points penalty!", [[self.game.lastActionResult subarrayWithRange:range] componentsJoinedByString:@" "], [self.game.lastActionResult[0] intValue]];
+            self.lastActionLable.text = [NSString stringWithFormat:@"%@ don't match! %d points penalty!", [self describeCardsArray:[self.game.lastActionResult subarrayWithRange:range]].string, [self.game.lastActionResult[0] intValue]];
         }
     } else {
         // match was not performed
         if (chosenCards.count > 0) {
-            self.lastActionLable.text = [NSString stringWithFormat:@"%@", [chosenCards componentsJoinedByString:@" "]];
+            self.lastActionLable.text = [self describeCardsArray:chosenCards].string;
         } else {
             self.lastActionLable.text = @"";
         }
     }
 }
 
-- (NSString *)titleForCard:(Card *)card {
-    return card.isChosen ? card.contents : @"";
+- (NSAttributedString *)describeCardsArray:(NSArray *)cards {
+	return nil;
+}
+
+- (NSAttributedString *)titleForCard:(Card *)card {
+    return [[NSAttributedString alloc] initWithString:card.isChosen ? card.contents : @""];
 }
 
 - (UIImage *)backgroundImageForCard:(Card *)card {
@@ -104,7 +113,7 @@
     self.game = nil;
     self.actionsHistory = nil;
     [self updateUI];
-    self.game = nil;
+    //self.game = nil;
 }
 
 @end

@@ -19,4 +19,8 @@
     return [[PlayingCardDeck alloc] init];
 }
 
+- (NSAttributedString *)describeCardsArray:(NSArray *)cards {
+	return [[NSAttributedString alloc] initWithString:[cards componentsJoinedByString:@" "]];
+}
+
 @end

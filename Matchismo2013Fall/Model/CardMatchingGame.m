@@ -12,7 +12,7 @@
 
 @property (nonatomic, readwrite) NSInteger score;
 @property (nonatomic, strong) NSMutableArray *cards;
-@property (nonatomic) NSInteger gameMode; // 1 - 2-card, 2 - 3-card, etc.
+@property (nonatomic) NSInteger gameMode; // 1 - 2-card (Playing card game), 2 - 3-card (Set card game), etc.
 @property (nonatomic, strong, readwrite) NSMutableArray *lastActionResult; // 0 - result, 1-n - cards involved
 
 @end

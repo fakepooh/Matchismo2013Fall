@@ -14,16 +14,36 @@
     return nil;
 }
 
+static const int MATCH_SCORE = 7;
+
 - (int)match:(NSArray *)otherCards {
     int score = 0;
     
-    
+    if ([otherCards count] == 2) {
+		// 3-card game
+        SetCard *otherCard1 = [otherCards firstObject];
+        SetCard *otherCard2 = [otherCards lastObject];
+//		Conditions:
+		BOOL condition1, condition2, condition3, condition4;
+//	1.	They all have the same number, or they have three different numbers.
+		condition1 = (self.number == otherCard1.number && self.number == otherCard2.number) ||
+			(self.number != otherCard1.number && self.number != otherCard2.number && otherCard1.number != otherCard2.number);
+//	2.	They all have the same symbol, or they have three different symbols.
+		condition2 = ([self.symbol isEqualToString:otherCard1.symbol] && [self.symbol isEqualToString:otherCard2.symbol]) || (![self.symbol isEqualToString:otherCard1.symbol] && ![self.symbol isEqualToString:otherCard2.symbol] && ![otherCard1.symbol isEqualToString:otherCard2.symbol]);
+//	3.	They all have the same shading, or they have three different shadings.
+		condition3 = ([self.shading isEqualToString:otherCard1.shading] && [self.shading isEqualToString:otherCard2.shading]) || (![self.shading isEqualToString:otherCard1.shading] && ![self.shading isEqualToString:otherCard2.shading] && ![otherCard1.shading isEqualToString:otherCard2.shading]);
+//	4.	They all have the same color, or they have three different colors.
+		condition4 = ([self.color isEqualToString:otherCard1.color] && [self.color isEqualToString:otherCard2.color]) || (![self.color isEqualToString:otherCard1.color] && ![self.color isEqualToString:otherCard2.color] && ![otherCard1.color isEqualToString:otherCard2.color]);
+		if (condition1 && condition2 && condition3 && condition4) {
+			score = MATCH_SCORE; // match!
+		}
+    }
     
     return score;
 }
 
 + (NSArray *)validSymbols {
-    return @[@"▲", @"●", @"◼"];
+    return @[@"▴", @"●", @"▪︎"];
 }
 
 + (NSArray *)validShadings {
