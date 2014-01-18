@@ -21,7 +21,8 @@
 
 @implementation CardGameViewController
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)setGameMode:(NSInteger)gameMode {
+	_gameMode = gameMode;
 	[self updateUI];
 }
 
@@ -75,26 +76,36 @@
     }
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
     
-    self.lastActionLable.alpha = 1;
-    
+	NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:@""];
     if (self.game.lastActionResult.count > 1) {
         if ([self.game.lastActionResult[0] intValue] > 0) {
             // cards were matched
             NSRange range = {1, self.game.lastActionResult.count - 1};
-            self.lastActionLable.text = [NSString stringWithFormat:@"Matched %@ for %d points!", [self describeCardsArray:[self.game.lastActionResult subarrayWithRange:range]].string, [self.game.lastActionResult[0] intValue]];
+			attributedText = [[NSMutableAttributedString alloc] initWithString:@"Matched "];
+			[attributedText appendAttributedString:[self describeCardsArray:[self.game.lastActionResult subarrayWithRange:range]]];
+			[attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" for %d points!", [self.game.lastActionResult[0] intValue]]]];
+			
         } else if ([self.game.lastActionResult[0] intValue] < 0) {
             // cards were mismatched
             NSRange range = {1, self.game.lastActionResult.count - 1};
-            self.lastActionLable.text = [NSString stringWithFormat:@"%@ don't match! %d points penalty!", [self describeCardsArray:[self.game.lastActionResult subarrayWithRange:range]].string, [self.game.lastActionResult[0] intValue]];
+			attributedText = [[self describeCardsArray:[self.game.lastActionResult subarrayWithRange:range]] mutableCopy];
+			[attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" don't match! %d points penalty!", [self.game.lastActionResult[0] intValue]]]];
+            //self.lastActionLable.text = [NSString stringWithFormat:@"%@ don't match! %d points penalty!", [self describeCardsArray:[self.game.lastActionResult subarrayWithRange:range]].string, [self.game.lastActionResult[0] intValue]];
         }
     } else {
         // match was not performed
         if (chosenCards.count > 0) {
-            self.lastActionLable.text = [self describeCardsArray:chosenCards].string;
-        } else {
-            self.lastActionLable.text = @"";
+            attributedText = [[self describeCardsArray:chosenCards] mutableCopy];
         }
     }
+	
+	if (attributedText) {
+		self.lastActionLable.attributedText = attributedText;
+		
+		if (![attributedText.string isEqualToString:@""]) {
+			[self.actionsHistory addObject:attributedText];
+		}
+	}
 }
 
 - (NSAttributedString *)describeCardsArray:(NSArray *)cards {

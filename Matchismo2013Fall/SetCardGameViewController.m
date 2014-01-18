@@ -57,6 +57,16 @@
     return title;
 }
 
+- (NSAttributedString *)describeCardsArray:(NSArray *)cards {
+	NSMutableAttributedString *resultedString = [[NSMutableAttributedString alloc] initWithString:@""];
+	
+	for (SetCard *card in cards) {
+		[resultedString appendAttributedString:[self titleForCard:card]];
+	}
+	
+	return resultedString;
+}
+
 - (UIImage *)backgroundImageForCard:(Card *)card {
     return [UIImage imageNamed:card.isChosen ? @"cardfront" : @"notchosensetcardfront"]; // change it
 }

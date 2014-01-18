@@ -20,7 +20,7 @@
 }
 
 - (NSAttributedString *)describeCardsArray:(NSArray *)cards {
-	return [[NSAttributedString alloc] initWithString:[cards componentsJoinedByString:@" "]];
+	return [[NSAttributedString alloc] initWithString:[cards componentsJoinedByString:@""]];
 }
 
 @end

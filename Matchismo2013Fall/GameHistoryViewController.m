@@ -20,7 +20,13 @@
 }
 
 - (void)updateUI {
-    self.gameHistoryTextView.text = [self.gameHistoryToShow componentsJoinedByString:@"\n"];
+	self.gameHistoryTextView.text = @"";
+	for (id string in self.gameHistoryToShow) {
+		if ([string isKindOfClass:[NSAttributedString class]]) {
+			[self.gameHistoryTextView.textStorage appendAttributedString:string];
+			[self.gameHistoryTextView.textStorage appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
+		}
+	}
 }
 
 @end
