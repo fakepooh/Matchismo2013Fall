@@ -9,5 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface CardGameViewController : UIViewController
+/*! 0 - Playing card game, 1 - Set game
+ */
 @property (nonatomic) NSInteger gameMode;
+extern NSString *const HighscoresUserDefaultsKey;
 @end

@@ -15,7 +15,11 @@
 - (instancetype)initWithCardCount:(NSUInteger)count
                         usingDeck:(Deck *)deck;
 
-// designated initializer
+/*! Designated initializer
+ @param count Cout of cards in the deck
+ @param deck Deck to draw cards from 
+ @param mode Playing 2-card game (0) or Set (3-card) game (1)
+ */
 - (instancetype)initWithCardCount:(NSUInteger)count
                         usingDeck:(Deck *)deck
                            inMode:(NSInteger)mode; // 0 - 2-card, 1 - 3-card
@@ -24,10 +28,13 @@
 - (Card *)cardAtIndex:(NSUInteger)index;
 
 @property (nonatomic, readonly) NSInteger score;
-@property (nonatomic, strong, readonly) NSMutableArray *lastActionResult; // 0 - result, 1-n - cards involved
-// result:
-// -N - mismatch
-// N - match
-// count < 2 - match was not performed
+
+/*! 0 - result, 1-n - cards involved
+ result:
+ -N - mismatch
+ N - match
+ count < 2 - match was not performed
+ */
+@property (nonatomic, strong, readonly) NSMutableArray *lastActionResult;
 
 @end

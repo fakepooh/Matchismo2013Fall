@@ -855,7 +855,7 @@
         <scene sceneID="ycm-TP-4zY">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="nNX-16-L0x" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Playing Card game" id="pSo-9o-9gN"/>
+                    <tabBarItem key="tabBarItem" title="Playing Card game" image="playing card Tab Bar icon" id="pSo-9o-9gN"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="2tN-DD-imo">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -870,10 +870,10 @@
             </objects>
             <point key="canvasLocation" x="636" y="253"/>
         </scene>
-        <!--View Controller - Highscores-->
+        <!--Highscores View Controller - Highscores-->
         <scene sceneID="tLl-9W-ysp">
             <objects>
-                <viewController id="k58-rl-DyR" sceneMemberID="viewController">
+                <viewController id="k58-rl-DyR" customClass="HighscoresViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="05V-5o-0uF"/>
                         <viewControllerLayoutGuide type="bottom" id="xKy-GV-VdT"/>
@@ -881,18 +881,43 @@
                     <view key="view" contentMode="scaleToFill" id="omK-n8-IA9">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="431"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LTz-xm-Q3e">
+                                <rect key="frame" x="0.0" y="20" width="320" height="353"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <attributedString key="attributedText"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LYM-fa-3lj">
+                                <rect key="frame" x="102" y="381" width="116" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="0.038580009849999999" blue="0.03922473479" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <state key="normal" title="Clear Highscores">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="clearHighscores" destination="k58-rl-DyR" eventType="touchUpInside" id="rQL-rd-ThS"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Highscores" id="Htl-qa-cqi"/>
+                    <connections>
+                        <outlet property="highscoresTextView" destination="LTz-xm-Q3e" id="Lgt-8v-1IF"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qvl-pv-FTg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="636" y="824"/>
         </scene>
-        <!--View Controller - Settings-->
+        <!--Settings View Controller - Settings-->
         <scene sceneID="2e1-xF-WoB">
             <objects>
-                <viewController id="PIQ-me-jb6" sceneMemberID="viewController">
+                <viewController id="PIQ-me-jb6" customClass="SettingsViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="LmR-PN-E6V"/>
                         <viewControllerLayoutGuide type="bottom" id="GgV-rH-XhW"/>
@@ -912,7 +937,7 @@
         <scene sceneID="cJv-lm-qxV">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="yDh-9M-YMX" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Set game" id="Cmn-Yi-pdX"/>
+                    <tabBarItem key="tabBarItem" title="Set game" image="set tab bar icon" id="Cmn-Yi-pdX"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="u5Z-X0-Ue7">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -952,6 +977,8 @@
     <resources>
         <image name="cardback" width="64" height="96"/>
         <image name="notchosensetcardfront" width="64" height="96"/>
+        <image name="playing card Tab Bar icon" width="30" height="30"/>
+        <image name="set tab bar icon" width="30" height="30"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

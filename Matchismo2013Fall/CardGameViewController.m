@@ -9,10 +9,13 @@
 #import "CardGameViewController.h"
 #import "CardMatchingGame.h"
 #import "GameHistoryViewController.h"
+#include "HighscoresArray.h"
 
 @interface CardGameViewController ()
 @property (strong, nonatomic) CardMatchingGame *game;
 @property (strong, nonatomic) NSMutableArray *actionsHistory;
+@property (nonatomic) BOOL gameStarted;
+@property (strong, nonatomic) HighscoreDictionary *highscoreRecord;
 
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
@@ -20,6 +23,13 @@
 @end
 
 @implementation CardGameViewController
+
+- (HighscoreDictionary *)highscoreRecord {
+	if (!_highscoreRecord) {
+		_highscoreRecord = [[HighscoreDictionary alloc] init];
+	}
+	return _highscoreRecord;
+}
 
 - (void)setGameMode:(NSInteger)gameMode {
 	_gameMode = gameMode;
@@ -58,6 +68,14 @@
     int chosenButtonIndex = [self.cardButtons indexOfObject:sender];
     [self.game chooseCardAtIndex:chosenButtonIndex];
     [self updateUI];
+	
+	// Playing card game is started with this event (if it's first one after game finish)
+	if (!self.gameStarted && !self.gameMode) {
+		self.gameStarted = YES;
+		self.highscoreRecord.startTime = [NSDate date];
+		self.highscoreRecord.gameId = self.gameMode;
+	}
+	self.highscoreRecord.score = self.game.score;
 }
 
 - (void)updateUI {
@@ -90,7 +108,7 @@
             NSRange range = {1, self.game.lastActionResult.count - 1};
 			attributedText = [[self describeCardsArray:[self.game.lastActionResult subarrayWithRange:range]] mutableCopy];
 			[attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" don't match! %d points penalty!", [self.game.lastActionResult[0] intValue]]]];
-            //self.lastActionLable.text = [NSString stringWithFormat:@"%@ don't match! %d points penalty!", [self describeCardsArray:[self.game.lastActionResult subarrayWithRange:range]].string, [self.game.lastActionResult[0] intValue]];
+			
         }
     } else {
         // match was not performed
@@ -124,7 +142,59 @@
     self.game = nil;
     self.actionsHistory = nil;
     [self updateUI];
-    //self.game = nil;
+    
+	// Any game is finished with this event
+	if (self.gameStarted) {
+		self.highscoreRecord.endTime = [NSDate date];
+		HighscoresArray *highscoresArray = [self getHighscores];
+		[highscoresArray addObject:self.highscoreRecord];
+		[self setHighscores:highscoresArray];
+		self.gameStarted = NO;
+	}
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+	// Any game can be resumed with this event (except the very first one). If gameStarted is YES reload HighscoresArray and look through it with indexOfObject:, remove the result from array and continue
+	// Set game is started with this event (if it's the very first one)
+	if (self.gameStarted) {
+		HighscoresArray *highscoresArray = [self getHighscores];
+		[highscoresArray.arrayOfDictionaries removeObjectAtIndex:[highscoresArray.arrayOfHighscoreDictionaries indexOfObject:self.highscoreRecord]];
+		[self setHighscores:highscoresArray];
+		self.highscoreRecord.endTime = nil;
+	} else if (self.gameMode == 1) {
+		self.gameStarted = YES;
+		self.highscoreRecord.startTime = [NSDate date];
+		self.highscoreRecord.gameId = self.gameMode;
+		self.highscoreRecord.score = 0;
+	}
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+	// Any game is either paused or finished with this event (cannot predict)
+	// Leave the gameStarted at YES
+	if (self.gameStarted) {
+		self.highscoreRecord.endTime = [NSDate date];
+		HighscoresArray *highscoresArray = [self getHighscores];
+		[highscoresArray addObject:self.highscoreRecord];
+		[self setHighscores:highscoresArray];
+	}
+}
+
+NSString *const HighscoresUserDefaultsKey = @"Highscores";
+
+- (HighscoresArray *)getHighscores {
+	HighscoresArray *highscoresArray = [[HighscoresArray alloc] init];
+	
+	NSArray *array = [[NSUserDefaults standardUserDefaults] arrayForKey:HighscoresUserDefaultsKey];
+	if (array)
+		highscoresArray.arrayOfDictionaries = [array mutableCopy];
+	
+	return highscoresArray;
+}
+
+- (void)setHighscores:(HighscoresArray *)table {
+	[[NSUserDefaults standardUserDefaults] setObject:table.arrayOfDictionaries forKey:HighscoresUserDefaultsKey];
+	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 @end
