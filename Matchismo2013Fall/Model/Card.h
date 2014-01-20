@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SettingsSingleton.h"
 
 @interface Card : NSObject
 

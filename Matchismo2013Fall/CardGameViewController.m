@@ -24,6 +24,9 @@
 
 @implementation CardGameViewController
 
+NSString *const HighscoresUserDefaultsKey = @"Highscores";
+NSString *const SettingsUserDefaultsKey = @"Settings";
+
 - (HighscoreDictionary *)highscoreRecord {
 	if (!_highscoreRecord) {
 		_highscoreRecord = [[HighscoreDictionary alloc] init];
@@ -153,7 +156,9 @@
 	}
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+	[SettingsSingleton sharedSettingsSingleton].settings.settings = [[[NSUserDefaults standardUserDefaults] dictionaryForKey:SettingsUserDefaultsKey] mutableCopy];
 	// Any game can be resumed with this event (except the very first one). If gameStarted is YES reload HighscoresArray and look through it with indexOfObject:, remove the result from array and continue
 	// Set game is started with this event (if it's the very first one)
 	if (self.gameStarted) {
@@ -170,6 +175,7 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
 	// Any game is either paused or finished with this event (cannot predict)
 	// Leave the gameStarted at YES
 	if (self.gameStarted) {
@@ -179,8 +185,6 @@
 		[self setHighscores:highscoresArray];
 	}
 }
-
-NSString *const HighscoresUserDefaultsKey = @"Highscores";
 
 - (HighscoresArray *)getHighscores {
 	HighscoresArray *highscoresArray = [[HighscoresArray alloc] init];

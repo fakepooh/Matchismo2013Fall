@@ -62,13 +62,14 @@
     return (index < self.cards.count) ? self.cards[index] : nil;
 }
 
-static const int MISMATCH_PENALTY = 14;
-static const int MATCH_BONUS = 4;
-static const int COST_TO_CHOOSE = 7;
+//static const int MISMATCH_PENALTY = 2;
+//static const int MATCH_BONUS = 4;
+//static const int COST_TO_CHOOSE = 1;
 
 - (void)chooseCardAtIndex:(NSUInteger)index {
     Card *card = [self cardAtIndex:index];
     self.lastActionResult = nil;
+	Settings *settings = [SettingsSingleton sharedSettingsSingleton].settings;
     
     if (!card.isMatched) {
         if (card.isChosen) {
@@ -89,16 +90,16 @@ static const int COST_TO_CHOOSE = 7;
                         [self.lastActionResult addObjectsFromArray:cardsToMatch];
                         
                         if (matchScore) {
-                            self.score += matchScore * MATCH_BONUS;
-                            self.lastActionResult[0] = [NSNumber numberWithInt:matchScore * MATCH_BONUS];
+                            self.score += matchScore * settings.matchBonus;
+                            self.lastActionResult[0] = [NSNumber numberWithInt:matchScore * settings.matchBonus];
                             for (Card *matchedCard in cardsToMatch) {
                                 matchedCard.matched = YES;
                             }
                             card.matched = YES;
                             
                         } else {
-                            self.score -= MISMATCH_PENALTY;
-                            self.lastActionResult[0] = [NSNumber numberWithInt:-MISMATCH_PENALTY];
+                            self.score -= settings.mismatchPenalty;
+                            self.lastActionResult[0] = [NSNumber numberWithInt:-settings.mismatchPenalty];
                             for (Card *mismatchedCard in cardsToMatch) {
                                 mismatchedCard.chosen = NO;
                             }
@@ -108,7 +109,7 @@ static const int COST_TO_CHOOSE = 7;
                 }
             }
             
-            self.score -= COST_TO_CHOOSE;
+            self.score -= settings.costToChoose;
             card.chosen = YES;
         }
     }

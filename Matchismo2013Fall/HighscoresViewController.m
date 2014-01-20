@@ -12,11 +12,14 @@
 
 @interface HighscoresViewController ()
 @property (weak, nonatomic) IBOutlet UITextView *highscoresTextView;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *sortOrderControl;
 @end
 
 @implementation HighscoresViewController
 
 - (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+	
 	self.highscoresTextView.text = @"";
 	
 	id array = [[NSUserDefaults standardUserDefaults] arrayForKey:HighscoresUserDefaultsKey];
@@ -24,31 +27,64 @@
 		HighscoresArray *highscoresArray = [[HighscoresArray alloc] init];
 		highscoresArray.arrayOfDictionaries = array;
 		
-		[highscoresArray orderByScore];
+		switch (self.sortOrderControl.selectedSegmentIndex) {
+			case 0:
+				//topScoreRange = [self orderAndGetTopScoreRange:highscoresArray];
+				[highscoresArray orderByScore];
+				break;
+			case 1:
+				[highscoresArray orderChronologically];
+				break;
+			case 2:
+				//shortestGameRange = [self orderAndGetShortestRange:highscoresArray];
+				[highscoresArray orderByDuration];
+				break;
+			default:
+				break;
+		}
+		
 		for (HighscoreDictionary *record in highscoresArray.arrayOfHighscoreDictionaries) {
 			[[self.highscoresTextView textStorage] appendAttributedString:[[NSAttributedString alloc] initWithString:record.gameId ? @"Set game: " : @"Playing card game: "]];
 			[[self.highscoresTextView textStorage] appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d points! ", record.score]]];
 			[[self.highscoresTextView textStorage] appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"Game started at %@ and lasted for %d seconds.\n", [NSDateFormatter localizedStringFromDate:record.startTime dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterShortStyle], record.duration]]];
 		}
 		
-		HighscoreDictionary *record = highscoresArray.arrayOfHighscoreDictionaries[0];
-		NSRange range = [self.highscoresTextView.text rangeOfString:[NSString stringWithFormat:@"%d", record.score]];
-		[self.highscoresTextView.textStorage addAttribute:NSForegroundColorAttributeName
-													value:[UIColor redColor]
-													range:range];
+		NSRange shortestGameRange = [self orderAndGetShortestRange:highscoresArray];
+		NSRange topScoreRange = [self orderAndGetTopScoreRange:highscoresArray];
 		
-		[highscoresArray orderByDuration];
-		record = highscoresArray.arrayOfHighscoreDictionaries[0];
-		range = [self.highscoresTextView.text rangeOfString:[NSString stringWithFormat:@"%d seconds", record.duration]];
 		[self.highscoresTextView.textStorage addAttribute:NSForegroundColorAttributeName
 													value:[UIColor redColor]
-													range:range];
+													range:topScoreRange];
+		
+		[self.highscoresTextView.textStorage addAttribute:NSForegroundColorAttributeName
+													value:[UIColor redColor]
+													range:shortestGameRange];
 	}
+}
+
+- (NSRange)orderAndGetTopScoreRange:(HighscoresArray *)array {
+	[array orderByScore];
+	HighscoreDictionary *record = array.arrayOfHighscoreDictionaries[0];
+	NSRange range = [self.highscoresTextView.text rangeOfString:[NSString stringWithFormat:@" %d points", record.score]];
+	
+	return range;
+}
+
+- (NSRange)orderAndGetShortestRange:(HighscoresArray *)array {
+	[array orderByDuration];
+	HighscoreDictionary *record = array.arrayOfHighscoreDictionaries[0];
+	NSRange range = [self.highscoresTextView.text rangeOfString:[NSString stringWithFormat:@" %d seconds", record.duration]];
+	
+	return range;
 }
 
 - (IBAction)clearHighscores {
 	[[NSUserDefaults standardUserDefaults] removeObjectForKey:HighscoresUserDefaultsKey];
 	[[NSUserDefaults standardUserDefaults] synchronize];
+	[self viewDidAppear:NO];
+}
+
+- (IBAction)sortOrderChanged {
 	[self viewDidAppear:NO];
 }
 

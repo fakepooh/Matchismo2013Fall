@@ -13,4 +13,5 @@
  */
 @property (nonatomic) NSInteger gameMode;
 extern NSString *const HighscoresUserDefaultsKey;
+extern NSString *const SettingsUserDefaultsKey;
 @end

@@ -11,6 +11,8 @@
 		7549DB77188AEF8700893150 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7549DB76188AEF8700893150 /* SettingsViewController.m */; };
 		7549DB80188B1FD800893150 /* HighscoreDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 7549DB7F188B1FD800893150 /* HighscoreDictionary.m */; };
 		7549DB83188B200400893150 /* HighscoresArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 7549DB82188B200400893150 /* HighscoresArray.m */; };
+		7597E8AD188D70420076D038 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 7597E8AC188D70420076D038 /* Settings.m */; };
+		7597E8B0188DC7FE0076D038 /* SettingsSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7597E8AF188DC7FE0076D038 /* SettingsSingleton.m */; };
 		C3319D20184614670090E26C /* CardMatchingGame.m in Sources */ = {isa = PBXBuildFile; fileRef = C3319D1F184614670090E26C /* CardMatchingGame.m */; };
 		C343492F188190AC0072327B /* PlayingCardGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C343492E188190AC0072327B /* PlayingCardGameViewController.m */; };
 		C38C2AA818856DC5002562E2 /* SetCardGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C38C2AA718856DC5002562E2 /* SetCardGameViewController.m */; };
@@ -56,6 +58,10 @@
 		7549DB7F188B1FD800893150 /* HighscoreDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HighscoreDictionary.m; path = Model/HighscoreDictionary.m; sourceTree = "<group>"; };
 		7549DB81188B200400893150 /* HighscoresArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HighscoresArray.h; path = Model/HighscoresArray.h; sourceTree = "<group>"; };
 		7549DB82188B200400893150 /* HighscoresArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HighscoresArray.m; path = Model/HighscoresArray.m; sourceTree = "<group>"; };
+		7597E8AB188D70420076D038 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Settings.h; path = Model/Settings.h; sourceTree = "<group>"; };
+		7597E8AC188D70420076D038 /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Settings.m; path = Model/Settings.m; sourceTree = "<group>"; };
+		7597E8AE188DC7FE0076D038 /* SettingsSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingsSingleton.h; path = Model/SettingsSingleton.h; sourceTree = "<group>"; };
+		7597E8AF188DC7FE0076D038 /* SettingsSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingsSingleton.m; path = Model/SettingsSingleton.m; sourceTree = "<group>"; };
 		C3319D1E184614670090E26C /* CardMatchingGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CardMatchingGame.h; path = Model/CardMatchingGame.h; sourceTree = "<group>"; };
 		C3319D1F184614670090E26C /* CardMatchingGame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CardMatchingGame.m; path = Model/CardMatchingGame.m; sourceTree = "<group>"; };
 		C343492D188190AC0072327B /* PlayingCardGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayingCardGameViewController.h; sourceTree = "<group>"; };
@@ -208,6 +214,10 @@
 		C3B8C674183BA90600E32053 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				7597E8AE188DC7FE0076D038 /* SettingsSingleton.h */,
+				7597E8AF188DC7FE0076D038 /* SettingsSingleton.m */,
+				7597E8AB188D70420076D038 /* Settings.h */,
+				7597E8AC188D70420076D038 /* Settings.m */,
 				7549DB7E188B1FD800893150 /* HighscoreDictionary.h */,
 				7549DB7F188B1FD800893150 /* HighscoreDictionary.m */,
 				7549DB81188B200400893150 /* HighscoresArray.h */,
@@ -328,8 +338,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7597E8B0188DC7FE0076D038 /* SettingsSingleton.m in Sources */,
 				C38CDA6F18817C1200276ADD /* GameHistoryViewController.m in Sources */,
 				7549DB74188AEF4500893150 /* HighscoresViewController.m in Sources */,
+				7597E8AD188D70420076D038 /* Settings.m in Sources */,
 				7549DB83188B200400893150 /* HighscoresArray.m in Sources */,
 				C3B8C64D183A5DB100E32053 /* CardGameAppDelegate.m in Sources */,
 				C3B8C653183A5DB100E32053 /* CardGameViewController.m in Sources */,

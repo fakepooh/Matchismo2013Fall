@@ -17,6 +17,8 @@
 @implementation SetCardGameViewController
 
 - (void)viewDidLoad {
+	[super viewDidLoad];
+	
     self.gameMode = 1; //Set Game
 }
 

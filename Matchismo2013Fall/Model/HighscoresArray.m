@@ -49,7 +49,8 @@
 }
 
 - (void)orderChronologically {
-	
+	NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:HighscoresKeyEndTime ascending:NO];
+	self.arrayOfDictionaries = [[self.arrayOfDictionaries sortedArrayUsingDescriptors:[NSArray arrayWithObjects:descriptor,nil]] mutableCopy];
 }
 
 @end

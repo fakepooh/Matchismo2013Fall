@@ -14,10 +14,11 @@
     return nil;
 }
 
-static const int MATCH_SCORE = 7;
+//static const int MATCH_SCORE = 7;
 
 - (int)match:(NSArray *)otherCards {
     int score = 0;
+	Settings *settings = [SettingsSingleton sharedSettingsSingleton].settings;
     
     if ([otherCards count] == 2) {
 		// 3-card game
@@ -35,7 +36,7 @@ static const int MATCH_SCORE = 7;
 //	4.	They all have the same color, or they have three different colors.
 		condition4 = ([self.color isEqualToString:otherCard1.color] && [self.color isEqualToString:otherCard2.color]) || (![self.color isEqualToString:otherCard1.color] && ![self.color isEqualToString:otherCard2.color] && ![otherCard1.color isEqualToString:otherCard2.color]);
 		if (condition1 && condition2 && condition3 && condition4) {
-			score = MATCH_SCORE; // match!
+			score = settings.setMatch; // match!
 		}
     }
     
