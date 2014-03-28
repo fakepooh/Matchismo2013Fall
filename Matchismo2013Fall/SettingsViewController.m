@@ -62,12 +62,12 @@
 - (void)updateUI {
 	self.settings.settings = [[[NSUserDefaults standardUserDefaults] dictionaryForKey:SettingsUserDefaultsKey] mutableCopy];
 	
-	self.costToChooseField.text = [NSString stringWithFormat:@"%d", self.settings.costToChoose];
-	self.matchBonusField.text = [NSString stringWithFormat:@"%d", self.settings.matchBonus];
-	self.mismatchPenaltyField.text = [NSString stringWithFormat:@"%d", self.settings.mismatchPenalty];
-	self.suitsMatchField.text = [NSString stringWithFormat:@"%d", self.settings.suitsMatch];
-	self.ranksMatch.text = [NSString stringWithFormat:@"%d", self.settings.ranksMatch];
-	self.setMatch.text = [NSString stringWithFormat:@"%d", self.settings.setMatch];
+	self.costToChooseField.text = [NSString stringWithFormat:@"%ld", self.settings.costToChoose];
+	self.matchBonusField.text = [NSString stringWithFormat:@"%ld", self.settings.matchBonus];
+	self.mismatchPenaltyField.text = [NSString stringWithFormat:@"%ld", self.settings.mismatchPenalty];
+	self.suitsMatchField.text = [NSString stringWithFormat:@"%ld", self.settings.suitsMatch];
+	self.ranksMatch.text = [NSString stringWithFormat:@"%ld", self.settings.ranksMatch];
+	self.setMatch.text = [NSString stringWithFormat:@"%ld", self.settings.setMatch];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {

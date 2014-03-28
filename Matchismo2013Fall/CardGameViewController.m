@@ -68,7 +68,7 @@ NSString *const SettingsUserDefaultsKey = @"Settings";
 }
 
 - (IBAction)touchCardButton:(UIButton *)sender {
-    int chosenButtonIndex = [self.cardButtons indexOfObject:sender];
+    NSUInteger chosenButtonIndex = [self.cardButtons indexOfObject:sender];
     [self.game chooseCardAtIndex:chosenButtonIndex];
     [self updateUI];
 	
@@ -85,7 +85,7 @@ NSString *const SettingsUserDefaultsKey = @"Settings";
     NSMutableArray *chosenCards = [[NSMutableArray alloc] init];
     
     for (UIButton *cardButton in self.cardButtons) {
-        int cardButtonIndex = [self.cardButtons indexOfObject:cardButton];
+        NSUInteger cardButtonIndex = [self.cardButtons indexOfObject:cardButton];
         Card *card = [self.game cardAtIndex:cardButtonIndex];
         [cardButton setAttributedTitle:[self titleForCard:card] forState:UIControlStateNormal];
         [cardButton setBackgroundImage:[self backgroundImageForCard:card] forState:UIControlStateNormal];
@@ -95,7 +95,7 @@ NSString *const SettingsUserDefaultsKey = @"Settings";
             [chosenCards addObject:card];
         }
     }
-    self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
+    self.scoreLabel.text = [NSString stringWithFormat:@"Score: %ld", self.game.score];
     
 	NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:@""];
     if (self.game.lastActionResult.count > 1) {

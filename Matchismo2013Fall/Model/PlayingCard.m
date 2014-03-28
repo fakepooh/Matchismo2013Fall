@@ -21,8 +21,8 @@
 //static const int RRSS3 = 33;// 2 ranks and 2 suits match
 //static const int RRR3 = 686;// all ranks match
 
-- (int)match:(NSArray *)otherCards {
-    int score = 0;
+- (NSInteger)match:(NSArray *)otherCards {
+    NSInteger score = 0;
 	Settings *settings = [SettingsSingleton sharedSettingsSingleton].settings;
     
     if ([otherCards count] == 1) {

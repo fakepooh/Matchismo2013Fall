@@ -16,8 +16,8 @@
 
 //static const int MATCH_SCORE = 7;
 
-- (int)match:(NSArray *)otherCards {
-    int score = 0;
+- (NSInteger)match:(NSArray *)otherCards {
+    NSInteger score = 0;
 	Settings *settings = [SettingsSingleton sharedSettingsSingleton].settings;
     
     if ([otherCards count] == 2) {

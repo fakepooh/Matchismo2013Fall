@@ -85,13 +85,13 @@
                     [cardsToMatch addObject:otherCard];
                     
                     if (cardsToMatch.count == self.gameMode) {
-                        int matchScore = [card match:cardsToMatch];
+                        NSInteger matchScore = [card match:cardsToMatch];
                         [self.lastActionResult addObject:card];
                         [self.lastActionResult addObjectsFromArray:cardsToMatch];
                         
                         if (matchScore) {
                             self.score += matchScore * settings.matchBonus;
-                            self.lastActionResult[0] = [NSNumber numberWithInt:matchScore * settings.matchBonus];
+                            self.lastActionResult[0] = [NSNumber numberWithInteger:matchScore * settings.matchBonus];
                             for (Card *matchedCard in cardsToMatch) {
                                 matchedCard.matched = YES;
                             }
@@ -99,7 +99,7 @@
                             
                         } else {
                             self.score -= settings.mismatchPenalty;
-                            self.lastActionResult[0] = [NSNumber numberWithInt:-settings.mismatchPenalty];
+                            self.lastActionResult[0] = [NSNumber numberWithInteger:-settings.mismatchPenalty];
                             for (Card *mismatchedCard in cardsToMatch) {
                                 mismatchedCard.chosen = NO;
                             }
