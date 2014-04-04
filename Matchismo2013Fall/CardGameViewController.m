@@ -8,18 +8,18 @@
 
 #import "CardGameViewController.h"
 #import "CardMatchingGame.h"
-#import "GameHistoryViewController.h"
-#include "HighscoresArray.h"
+#import "HighscoresArray.h"
+#import "CardView.h"
+#import "Grid.h"
 
 @interface CardGameViewController ()
 @property (strong, nonatomic) CardMatchingGame *game;
-@property (strong, nonatomic) NSMutableArray *actionsHistory;
+@property (strong, nonatomic) NSMutableArray *cards;
 @property (nonatomic) BOOL gameStarted;
 @property (strong, nonatomic) HighscoreDictionary *highscoreRecord;
 
-@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
+@property (weak, nonatomic) IBOutlet UIView *canvas;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
-@property (weak, nonatomic) IBOutlet UILabel *lastActionLable;
 @end
 
 @implementation CardGameViewController
@@ -41,26 +41,10 @@ NSString *const SettingsUserDefaultsKey = @"Settings";
 
 - (CardMatchingGame *)game {
     if (!_game)
-        _game = [[CardMatchingGame alloc] initWithCardCount:self.cardButtons.count
+        _game = [[CardMatchingGame alloc] initWithCardCount:self.cards.count
                                                   usingDeck:[self createDeck]
 													 inMode:self.gameMode];
     return _game;
-}
-
-- (NSMutableArray *)actionsHistory {
-    if (!_actionsHistory)
-        _actionsHistory = [[NSMutableArray alloc] init];
-    
-    return _actionsHistory;
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"Show Game History"]) {
-        if ([segue.destinationViewController isKindOfClass:[GameHistoryViewController class]]) {
-            GameHistoryViewController *ghvc = (GameHistoryViewController *)segue.destinationViewController;
-            ghvc.gameHistoryToShow = self.actionsHistory;
-        }
-    }
 }
 
 - (Deck *)createDeck {
@@ -68,8 +52,8 @@ NSString *const SettingsUserDefaultsKey = @"Settings";
 }
 
 - (IBAction)touchCardButton:(UIButton *)sender {
-    NSUInteger chosenButtonIndex = [self.cardButtons indexOfObject:sender];
-    [self.game chooseCardAtIndex:chosenButtonIndex];
+//    NSUInteger chosenButtonIndex = [self.cardButtons indexOfObject:sender];
+//    [self.game chooseCardAtIndex:chosenButtonIndex];
     [self updateUI];
 	
 	// Playing card game is started with this event (if it's first one after game finish)
@@ -82,51 +66,21 @@ NSString *const SettingsUserDefaultsKey = @"Settings";
 }
 
 - (void)updateUI {
-    NSMutableArray *chosenCards = [[NSMutableArray alloc] init];
+//    NSMutableArray *chosenCards = [[NSMutableArray alloc] init];
     
-    for (UIButton *cardButton in self.cardButtons) {
-        NSUInteger cardButtonIndex = [self.cardButtons indexOfObject:cardButton];
-        Card *card = [self.game cardAtIndex:cardButtonIndex];
-        [cardButton setAttributedTitle:[self titleForCard:card] forState:UIControlStateNormal];
-        [cardButton setBackgroundImage:[self backgroundImageForCard:card] forState:UIControlStateNormal];
-        cardButton.enabled = !card.isMatched;
+    for (CardView *cardView in self.cards) {
+        NSUInteger cardIndex = [self.cards indexOfObject:cardView];
+        Card *card = [self.game cardAtIndex:cardIndex];
+//        [cardView setAttributedTitle:[self titleForCard:card] forState:UIControlStateNormal];
+//        [cardView setBackgroundImage:[self backgroundImageForCard:card] forState:UIControlStateNormal];
+        if (card.isMatched)
+            [cardView removeFromSuperview];
         
-        if (card.isChosen && !card.isMatched) {
-            [chosenCards addObject:card];
-        }
+//        if (card.isChosen && !card.isMatched) {
+//            [chosenCards addObject:card];
+//        }
     }
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %ld", self.game.score];
-    
-	NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:@""];
-    if (self.game.lastActionResult.count > 1) {
-        if ([self.game.lastActionResult[0] intValue] > 0) {
-            // cards were matched
-            NSRange range = {1, self.game.lastActionResult.count - 1};
-			attributedText = [[NSMutableAttributedString alloc] initWithString:@"Matched "];
-			[attributedText appendAttributedString:[self describeCardsArray:[self.game.lastActionResult subarrayWithRange:range]]];
-			[attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" for %d points!", [self.game.lastActionResult[0] intValue]]]];
-			
-        } else if ([self.game.lastActionResult[0] intValue] < 0) {
-            // cards were mismatched
-            NSRange range = {1, self.game.lastActionResult.count - 1};
-			attributedText = [[self describeCardsArray:[self.game.lastActionResult subarrayWithRange:range]] mutableCopy];
-			[attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" don't match! %d points penalty!", [self.game.lastActionResult[0] intValue]]]];
-			
-        }
-    } else {
-        // match was not performed
-        if (chosenCards.count > 0) {
-            attributedText = [[self describeCardsArray:chosenCards] mutableCopy];
-        }
-    }
-	
-	if (attributedText) {
-		self.lastActionLable.attributedText = attributedText;
-		
-		if (![attributedText.string isEqualToString:@""]) {
-			[self.actionsHistory addObject:attributedText];
-		}
-	}
 }
 
 - (NSAttributedString *)describeCardsArray:(NSArray *)cards {
@@ -143,7 +97,7 @@ NSString *const SettingsUserDefaultsKey = @"Settings";
 
 - (IBAction)touchDealButton {
     self.game = nil;
-    self.actionsHistory = nil;
+    [self initialDeal];
     [self updateUI];
     
 	// Any game is finished with this event
@@ -156,6 +110,31 @@ NSString *const SettingsUserDefaultsKey = @"Settings";
 	}
 }
 
+- (HighscoresArray *)getHighscores {
+	HighscoresArray *highscoresArray = nil;
+	
+	NSArray *array = [[NSUserDefaults standardUserDefaults] arrayForKey:HighscoresUserDefaultsKey];
+	if (array) {
+        highscoresArray = [[HighscoresArray alloc] init];
+		highscoresArray.arrayOfDictionaries = [array mutableCopy];
+    }
+	
+	return highscoresArray;
+}
+
+- (void)setHighscores:(HighscoresArray *)table {
+	[[NSUserDefaults standardUserDefaults] setObject:table.arrayOfDictionaries forKey:HighscoresUserDefaultsKey];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (NSMutableArray *)cards {
+    if (!_cards)
+        _cards = [[NSMutableArray alloc] init];
+    return _cards;
+}
+
+#pragma mark - Initialization
+
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
 	[SettingsSingleton sharedSettingsSingleton].settings.settings = [[[NSUserDefaults standardUserDefaults] dictionaryForKey:SettingsUserDefaultsKey] mutableCopy];
@@ -163,8 +142,12 @@ NSString *const SettingsUserDefaultsKey = @"Settings";
 	// Set game is started with this event (if it's the very first one)
 	if (self.gameStarted) {
 		HighscoresArray *highscoresArray = [self getHighscores];
-		[highscoresArray.arrayOfDictionaries removeObjectAtIndex:[highscoresArray.arrayOfHighscoreDictionaries indexOfObject:self.highscoreRecord]];
-		[self setHighscores:highscoresArray];
+        if (highscoresArray) {
+            NSUInteger index = [highscoresArray.arrayOfHighscoreDictionaries indexOfObject:self.highscoreRecord];
+            if (index != NSNotFound)
+                [highscoresArray.arrayOfDictionaries removeObjectAtIndex:index];
+            [self setHighscores:highscoresArray];
+        }
 		self.highscoreRecord.endTime = nil;
 	} else if (self.gameMode == 1) {
 		self.gameStarted = YES;
@@ -181,24 +164,49 @@ NSString *const SettingsUserDefaultsKey = @"Settings";
 	if (self.gameStarted) {
 		self.highscoreRecord.endTime = [NSDate date];
 		HighscoresArray *highscoresArray = [self getHighscores];
+        if (!highscoresArray)
+            highscoresArray = [[HighscoresArray alloc] init];
 		[highscoresArray addObject:self.highscoreRecord];
 		[self setHighscores:highscoresArray];
 	}
 }
 
-- (HighscoresArray *)getHighscores {
-	HighscoresArray *highscoresArray = [[HighscoresArray alloc] init];
-	
-	NSArray *array = [[NSUserDefaults standardUserDefaults] arrayForKey:HighscoresUserDefaultsKey];
-	if (array)
-		highscoresArray.arrayOfDictionaries = [array mutableCopy];
-	
-	return highscoresArray;
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    [self initialDeal];
 }
 
-- (void)setHighscores:(HighscoresArray *)table {
-	[[NSUserDefaults standardUserDefaults] setObject:table.arrayOfDictionaries forKey:HighscoresUserDefaultsKey];
-	[[NSUserDefaults standardUserDefaults] synchronize];
+- (void)initialDeal {
+    Grid *grid = [[Grid alloc] init];
+    grid.cellAspectRatio = 0.75;
+    grid.size = self.canvas.bounds.size;
+    grid.minimumNumberOfCells = 1;
+    
+    for (CardView* cardView in self.cards) {
+        [cardView removeFromSuperview];
+    }
+    [self.cards removeAllObjects];
+    
+    for (NSUInteger row = 0; row < grid.rowCount; row ++) {
+        for (NSUInteger column = 0; column < grid.columnCount; column ++) {
+            CardView *cardView = [self generateCardViewWithFrame:[grid frameOfCellAtRow:row inColumn:column]];
+            [self.canvas addSubview:cardView];
+            [self.cards addObject:cardView];
+            [cardView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:cardView
+                                                                                     action:@selector(pinch:)]];
+            [cardView addGestureRecognizer:[[UISwipeGestureRecognizer alloc] initWithTarget:cardView
+                                                                                     action:@selector(swipeOrTap:)]];
+            [cardView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:cardView
+                                                                                     action:@selector(swipeOrTap:)]];
+        }
+    }
+}
+
+- (CardView *)generateCardViewWithFrame:(CGRect)frame {
+    CardView *cardView = [[CardView alloc] initWithFrame:frame];
+    
+    return cardView;
 }
 
 @end

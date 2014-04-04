@@ -8,6 +8,7 @@
 
 #import "PlayingCardGameViewController.h"
 #import "PlayingCardDeck.h"
+#import "PlayingCardView.h"
 
 @interface PlayingCardGameViewController ()
 
@@ -21,6 +22,10 @@
 
 - (NSAttributedString *)describeCardsArray:(NSArray *)cards {
 	return [[NSAttributedString alloc] initWithString:[cards componentsJoinedByString:@""]];
+}
+
+- (CardView *)generateCardViewWithFrame:(CGRect)frame {
+    return [[PlayingCardView alloc] initWithFrame:frame];
 }
 
 @end
